@@ -5,7 +5,48 @@ jQuery plugin to lazy load responsive images with retina support.
 
 ## How it works
 
-...
+Using jQuery lazyResp is pretty straightforward, just include the script in your page:
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../jquery.lazyresp.js"></script>
+
+Then initialize it on `$(window).load()` as follow:
+
+    <img src="http://placehold.it/480x360" height="250" width="250" class="lazyResp"
+        data-small-retina="http://placehold.it/960x720" 
+        data-medium="http://placehold.it/1024x768" 
+        data-medium-retina="http://placehold.it/2048x1536" 
+        data-large="http://placehold.it/1920x1440" 
+        data-large-retina="http://placehold.it/2560x1920">
+      
+    ...
+      
+    <script type="text/javascript">
+    $(window).load(function() {
+      $('img.lazyResp').lazyResp();
+    });
+    </script>
+
+Here's the script options and default values:
+
+    $('img.lazyResp').lazyResp({
+      medium: 640,    // Medium > 640px
+      large: 1024,    // Large > 1024px
+      retina: 1.01,   // Device pixel ratio to be considered retina >= 1.01
+      tolerance: 0    // Extend the viewport of 0px vertically and horizontally
+    });
+
+jQuery lazyResp provide also a `refresh()` method to check if elements are in the viewport without having to scroll the page:
+
+    var lr = $('img.lazyResp').lazyResp();
+    $('a.check').click(function (e) {
+      e.preventDefault();
+      lr.refresh();
+    });
+
+You can also target the loading of a given image, here's an example using jQuery lazyResp with jQuery owlCarousel:
+
+    Code
 
 ## What's behind jQuery lazyResp development?
 
