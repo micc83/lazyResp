@@ -99,9 +99,7 @@
 
     this.refresh = $.proxy(function () {
       this.each(function() {
-        if ($.data(this, "lazyResp")){
-          $.data(this, "lazyResp").checkImage();
-        }
+        $.data(this, "lazyResp").checkImage();
       });
     }, this);
 
