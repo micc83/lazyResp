@@ -74,11 +74,11 @@ Lately i dealt with the development of a website with a huge amount of images on
 Let's see which images sizes are involved:
 
 * **Small screen no retina** 480x360 ~ 43Kb * 10 images = 430 Kb
-* **Small screen retina** 960x720 ~ 119Kb * 10 images = 1.190 Kb
+* **Small screen retina (2x)** 960x720 ~ 119Kb * 10 images = 1.190 Kb
 * **Medium screen no retina** 1024x768 ~ 131Kb * 10 images = 1.310 Kb
-* **Medium screen retina** 2048x1536 ~ 353Kb * 10 images = 3.530 Kb
+* **Medium screen retina (2x)** 2048x1536 ~ 353Kb * 10 images = 3.530 Kb
 * **Large screen no retina** 1920x1440 ~ 322Kb * 10 images = 3.220 Kb
-* **Large screen retina** 2560x1920 ~ 483Kb * 10 images = 4.830Kb
+* **Large screen retina (2x)** 2560x1920 ~ 483Kb * 10 images = 4.830Kb
 
 The first thing i noticed is that small screen images total size (430Kb) is ridicoulous if compared with any of the other sizes. So i started doing some test using **Chrome Dev Tools** to limit the bandwidth to *Edge/3G connection* on small and medium screen size. The only condition in which the website was fully usable was indeed with the small images set.
 
