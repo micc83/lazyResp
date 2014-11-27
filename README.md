@@ -56,11 +56,11 @@ $(document).ready(function() {
     navigation : true,
     afterInit: function () {
       var $firstImage = $(this.owl.owlItems[0]).find('img');
-      $($firstImage).lazyResp({lazy:false});
+      $firstImage.lazyResp({lazy:false});
     },
     afterMove: function () {
       var $currentImage = $(this.owl.owlItems[this.owl.currentItem]).find('img');
-      $($currentImage).lazyResp({lazy:false});
+      $currentImage.lazyResp({lazy:false});
     }
   });
 });
