@@ -1,7 +1,7 @@
 jQuery lazyResp
 ========
 
-jQuery plugin to lazy load responsive images with retina support.
+lazyResp is a jQuery plugin with a very small footprint ( ~ 0.7 Kb Gzipped ) that handle images loading on multiple screen resolution.
 
 ## How it works
 
@@ -33,7 +33,10 @@ Here's the script options and default values:
       medium: 640,    // Medium > 640px
       large: 1024,    // Large > 1024px
       retina: 1.01,   // Device pixel ratio to be considered retina >= 1.01
-      tolerance: 0    // Extend the viewport of 0px vertically and horizontally
+      tolerance: 0,   // Extend the viewport of 0px vertically and horizontally
+      lazy: true,     // If set to false disable lazy loading
+      beforeLoad: function (img) {},  // Do something before the right image is loaded
+      afterLoad: function (img) {}    // Do something after the right image is loaded
     });
 
 jQuery lazyResp provide also a `refresh()` method to check if elements are in the viewport without having to scroll the page:
@@ -44,9 +47,22 @@ jQuery lazyResp provide also a `refresh()` method to check if elements are in th
       lr.refresh();
     });
 
-You can also target the loading of a given image, here's an example using jQuery lazyResp with jQuery owlCarousel:
+You can also target a given image setting `lazy` to false in order to load the right image size on demand, here's an example using jQuery lazyResp with jQuery owlCarousel:
 
-    Code
+    $(document).ready(function() {
+      $("#owl-demo").owlCarousel({
+        singleItem:true,
+        navigation : true,
+        afterInit: function () {
+          var $firstImage = $(this.owl.owlItems[0]).find('img');
+          $($firstImage).lazyResp({lazy:false});
+        },
+        afterMove: function () {
+          var $currentImage = $(this.owl.owlItems[this.owl.currentItem]).find('img');
+          $($currentImage).lazyResp({lazy:false});
+        }
+      });
+    });
 
 ## What's behind jQuery lazyResp development?
 
@@ -63,9 +79,9 @@ Let's see which images sizes are involved:
 * Large screen no retina 1920x1440 ~ 322Kb * 10 images = 3.220 Kb
 * Large screen retina 2560x1920 ~ 483Kb * 10 images = 4.830Kb
 
-The first thing i noticed is that small screen total image size (430Kb) is ridicoulous if compared with any of the other sizes. So i started doing some test using Chrome Dev Tools to limit the bandwidth to Edge/3G connection on small and medium screen size. The only condition in which the website was fully usable was indeed with the small images set.
+The first thing i noticed is that small screen images total size (430Kb) is ridicoulous if compared with any of the other sizes. So i started doing some test using Chrome Dev Tools to limit the bandwidth to Edge/3G connection on small and medium screen size. The only condition in which the website was fully usable was indeed with the small images set.
 
-The problem is that most of the javascript plugin available to handle responsize images are loading directly the screen fitting image so untill all the high res images are fully loaded the website isn't usable at all.
+The problem is that most of the javascript plugin available to handle responsize images are loading directly the screen fitting image so untill all the high res images are fully loaded the website isn't really usable.
 
 With jQuery lazyResp small screen images load first while screen fitting image are loaded only after the window is fully loaded replacing previous loaded small images.
 
@@ -85,5 +101,5 @@ As you can see this solution might fit your needs, **or may not**. Just do a lot
 
 ### Lazy loading
 
-Actually i didn't add much to a standard lazy loading script. When small screen images get into the viewport the high quality image is loaded saving bandwidth,thanks to [jQuery ReVIEW](https://github.com/resrcit/ReVIEW) for the viewport visibily code.
+Actually i didn't add much to a standard lazy loading script. When small screen images get into the viewport (check on scroll event or manually) high quality images are loaded saving bandwidth, thanks to [jQuery ReVIEW](https://github.com/resrcit/ReVIEW) for the viewport visibily code.
 

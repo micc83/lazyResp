@@ -1,22 +1,24 @@
 /*! jQuery-lazyResp v0.1.0 by Alessandro Benoit */
-(function ($, window) {
+(function ($, window, i) {
 
   'use strict';
 
   var $w = $(window),
-      pixelRatio = window.devicePixelRatio;
+      pixel_ratio = window.devicePixelRatio;
 
   // The actual plugin constructor
   function Plugin(element, settings) {
 
     var plugin = this,
-        $originalImage = $(element),
+        $original_image = $(element),
+        original_image_display = $original_image.css('display'),
         loaded = false,
-        lastQuality = 1;
+        last_quality = 1,
+        id = i++;
 
-    plugin.loadImage = function () {
+    plugin.checkImage = function (reload) {
 
-      if ( loaded || !in_viewport($originalImage) ) {
+      if ( loaded || ($('#lazyResp_' + id).length > 0 && !in_viewport($('#lazyResp_' + id))) || !in_viewport($original_image) ) {
         return false;
       }
 
@@ -28,7 +30,7 @@
 
       loaded = false;
 
-      if ( !in_viewport($originalImage) ) {
+      if ( ($('#lazyResp_' + id).length > 0 && !in_viewport($('#lazyResp_' + id))) || !in_viewport($original_image) ) {
         return false;
       }
 
@@ -39,39 +41,45 @@
     plugin.getRightImageSize = function () {
 
       var window_width = $w.width(),
-          imageSize,
+          image_size,
           quality;
 
-      if ( $originalImage.data('large') && window_width > parseInt(settings.large, 10) ){
-        imageSize = 'large';
+      if ( $original_image.data('large') && window_width > parseInt(settings.large, 10) ){
+        image_size = 'large';
         quality = 5;
-      } else if ( $originalImage.data('medium') && window_width > parseInt(settings.medium, 10) ) {
-        imageSize = 'medium';
+      } else if ( $original_image.data('medium') && window_width > parseInt(settings.medium, 10) ) {
+        image_size = 'medium';
         quality = 3;
       } else {
-        imageSize = 'small';
+        image_size = 'small';
         quality = 1;
       }
 
-      if ( pixelRatio >= settings.retina && $originalImage.data(imageSize + '-retina') ){
-        imageSize = imageSize + '-retina';
+      if ( pixel_ratio >= settings.retina && $original_image.data(image_size + '-retina') ){
+        image_size = image_size + '-retina';
         quality++;
       }
 
-      if (imageSize === 'small' || lastQuality >= quality){
+      if (image_size === 'small' || last_quality >= quality){
         return false;
       }
 
       loaded = true;
-      settings.beforeLoad($originalImage);
+      settings.beforeLoad($original_image);
 
       $('<img/>', {
-        src: $originalImage.data(imageSize)
+        src: $original_image.data(image_size),
+        'class': $original_image.attr('class'),
+        alt: $original_image.attr('alt')
       }).appendTo('body').hide().load(function () {
-        lastQuality = quality;
-        $originalImage.attr('src', $(this).attr('src'));
-        $(this).remove();
-        settings.afterLoad($originalImage);
+        last_quality = quality;
+        if ( $('#lazyResp_' + id).length > 0 ){
+          $('#lazyResp_' + id).remove();
+        } else {
+          $original_image.hide();
+        }
+        $(this).attr('id', 'lazyResp_' + id).css('display', original_image_display).insertAfter($original_image);
+        settings.afterLoad($original_image, $(this));
       });
 
     };
@@ -94,16 +102,16 @@
 
     }
 
-    $w.resize(function () {
+    $(window).resize(function () {
       plugin.reloadImage();
     });
     
     if ( settings.lazy ){
 
-      plugin.loadImage();
+      plugin.checkImage();
 
-      $w.scroll(function () {
-        plugin.loadImage();
+      $(window).scroll(function () {
+        plugin.checkImage();
       });
 
     } else {
@@ -126,7 +134,7 @@
           tolerance: 0,
           lazy: true,
           beforeLoad: function (img) {},
-          afterLoad: function (img) {}
+          afterLoad: function (img, newImg) {}
         }, options);
 
     this.each(function () {
@@ -137,7 +145,7 @@
 
     this.refresh = $.proxy(function () {
       this.each(function() {
-        $.data(this, "lazyResp").loadImage();
+        $.data(this, "lazyResp").checkImage();
       });
     }, this);
 
@@ -145,4 +153,4 @@
 
   };
 
-})(jQuery, this);
+})(jQuery, this, 0);
