@@ -71,11 +71,19 @@
 
     }
 
-    this.checkImage();
+    if ( settings.lazy ){
 
-    $(window).scroll( $.proxy(function () {
       this.checkImage();
-    }, this));
+
+      $(window).scroll( $.proxy(function () {
+        this.checkImage();
+      }, this));
+
+    } else {
+
+      this.getRightImageSize();
+
+    }
 
     return this;
 
@@ -88,7 +96,8 @@
           medium: 640,
           large: 1024,
           retina: 1.01,
-          tolerance: 0
+          tolerance: 0,
+          lazy: true
         }, options);
 
     this.each(function () {
