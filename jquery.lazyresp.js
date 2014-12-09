@@ -67,7 +67,7 @@
 
       $('<img/>', {
         src: $originalImage.data(imageSize)
-      }).appendTo('body').hide().load(function () {
+      }).load(function () {
         lastQuality = quality;
         $originalImage.attr('src', $(this).attr('src'));
         $(this).remove();
