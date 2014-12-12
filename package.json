@@ -1,7 +1,7 @@
 {
   "name": "jQuery-lazyResp",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "jQuery plugin to lazy load responsive images with retina support",
   "repository": "",
   "homepage": "http://codeb.it/lazyrespimg/",

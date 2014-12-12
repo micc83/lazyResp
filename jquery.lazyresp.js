@@ -1,4 +1,4 @@
-/*! jQuery-lazyResp v0.1.0 by Alessandro Benoit */
+/*! jQuery-lazyResp v0.1.1 by Alessandro Benoit */
 (function ($, window) {
 
   'use strict';
@@ -59,6 +59,9 @@
       }
 
       if (imageSize === 'small' || lastQuality >= quality){
+        // Events are fired with a custom attr when no image is loaded
+        settings.beforeLoad($originalImage, true);
+        settings.afterLoad($originalImage, true);
         return false;
       }
 
@@ -125,13 +128,15 @@
           retina: 1.01,
           tolerance: 0,
           lazy: true,
-          beforeLoad: function (img) {},
-          afterLoad: function (img) {}
+          beforeLoad: function (img, preloaded) {},
+          afterLoad: function (img, preloaded) {}
         }, options);
 
     this.each(function () {
-      if (!$.data(this, "lazyResp")) {
+      if ( !$.data(this, "lazyResp") ) {
         $.data(this, "lazyResp", new Plugin(this, settings));
+      } else if ( !settings.lazy ){
+        $.data(this, "lazyResp").getRightImageSize();
       }
     });
 
